@@ -17,6 +17,10 @@ struct ContentView: View {
                 .tag(2)
             Promo(title: "La promo", symbole: "pc")
                 .tag(3)
+            ProfilView().tabItem{
+                Image(systemName: "person.fill")
+                Text("Profil")
+            }
         }
     }
 }
@@ -76,27 +80,49 @@ struct Promo: View {
     var symbole : String
     var body: some View {
         NavigationStack {
-            ForEach(teams){ personne in
-                
-                HStack{
-                    Spacer()
-                    Image(personne.photo)
-                        .renderingMode(.original)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 100.0, height: 100.0)
-                        .clipShape(Circle())
-                    Spacer()
-                    Text(personne.name)
-                        .fontWeight(.bold)
-                        .frame(width: 200.0,alignment: .leading)
-                    Spacer()
-                    Text(personne.groupe)
-                        .foregroundColor(.gray)
-                    Spacer()
+            ScrollView {
+                Spacer()
+                ForEach(teams){ personne in
+                    NavigationLink(destination: {
+                        Image(personne.photo)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(Circle())
+                            .frame(width: 350.0, height: 350.0)
+                        Text(personne.name)
+                            .font(.title)
+                            .bold()
+                        Text("Nombres de membres : \(personne.groupe)")
+                            .foregroundColor(Color.gray)
+                        List(personne.team,id:\.self){ membres in
+                            Text(membres)
+                        }
+                    }, label: {
+                        HStack{
+                            Spacer()
+                            Image(personne.photo)
+                                .renderingMode(.original)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 100.0, height: 100.0)
+                                .clipShape(Circle())
+                            Spacer()
+                            Text(personne.name)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.black)
+                                .frame(width: 200.0,alignment: .leading)
+                            Spacer()
+                            Text(personne.groupe)
+                                .foregroundColor(.gray)
+                            Spacer()
+                            Image(systemName: "chevron.right.circle.fill")
+                            Spacer()
+                        }
+                    })
+                    .navigationTitle("La Promo")
+                    Divider()
                 }
-                Divider()
-            }.navigationTitle("La Promo")
+            }
             }
                 .tabItem{
                     Text(title)
@@ -137,6 +163,7 @@ struct Personne : Identifiable {
     var name : String
     var groupe : String
     var city : String = "Toulouse"
+    var team : [String] = []
 }
 
 var personnes = [
@@ -147,10 +174,10 @@ var personnes = [
     
 ]
 var teams = [
-    Personne(photo: "music", name: "Musicall", groupe: "5"),
-    Personne(photo: "sport", name: "L'AS Cacahouète", groupe: "4"),
-    Personne(photo: "espace", name: "Mass Effect", groupe: "5"),
-    Personne(photo: "education", name: "Edu-up", groupe: "5"),
-    Personne(photo: "solidarité", name: "Tous Unis", groupe: "5"),
+    Personne(photo: "music", name: "Musicall", groupe: "5",team: ["Theo","Mehdi","Mohammed","Dylan","Coralie"]),
+    Personne(photo: "sport", name: "L'AS Cacahouète", groupe: "3",team: ["Sacha","Félix","Tom"]),
+    Personne(photo: "espace", name: "Mass Effect", groupe: "5",team: ["Simon","Teck","Emma","Audrey","Alexis"]),
+    Personne(photo: "education", name: "Edu-up", groupe: "5",team: ["Pongo","Amira","Sambatra","Klesya","Thierno"]),
+    Personne(photo: "solidarité", name: "Tous Unis", groupe: "5",team: ["Claire","Marry","Mohammed","Nyams","Valérie"])
 ]
 
